@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CC.Common.JSON")]
+[assembly: AssemblyTitle("CC.Common.JSON.Demo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Canyon County")]
-[assembly: AssemblyProduct("CC.Common.JSON")]
+[assembly: AssemblyProduct("CC.Common.JSON.Demo")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("43ae1acb-39fb-4328-aba4-3865ec61cd09")]
+[assembly: Guid("f721990a-90c5-422f-a502-10c3cd4d1fc7")]
 
 // Version information for an assembly consists of the following four values:
 //
