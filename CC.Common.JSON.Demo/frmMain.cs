@@ -14,6 +14,8 @@ namespace CC.Common.JSON.Demo
   {
     private CCPreferences prefs;
     private double _openCount;
+    private string _defaultKeyText = @"Rename 'key_docs' to 'key' and change this text!";
+    private string _userKeyText;
 
     public frmMain()
     {
@@ -40,6 +42,7 @@ namespace CC.Common.JSON.Demo
     private void LoadPreferences()
     {
       prefs.Load(@"C:\Temp\Test.json");
+      
       checkBox1.Checked = prefs.Get("checkBox", false);
       DateTime now = DateTime.Now;
       dateTimePicker1.Value = prefs.Get("dateTime", new DateTime(now.Year, now.Month, now.Day, 23, 0, 0));
@@ -47,8 +50,22 @@ namespace CC.Common.JSON.Demo
       numericUpDown1.Value = prefs.Get("integer", 0);
       _openCount = prefs.Get("float", 0.0f);
       Text = _openCount.ToString();
+      
       this.Size = prefs.Get("size", new Size(314, 202));
       this.Location = prefs.Get("location", new Point(0, 0));
+
+      if (prefs.ContainsKey("key"))
+      {
+        _userKeyText = prefs.Get("key", _defaultKeyText);
+        if (!_userKeyText.Equals(_defaultKeyText))
+        {
+          MessageBox.Show("You renamed key!" + Environment.NewLine + _userKeyText);
+        }
+        else
+        {
+          MessageBox.Show("You need to change the text");
+        }
+      }
     }
     
     private void SavePreferences()
@@ -61,6 +78,16 @@ namespace CC.Common.JSON.Demo
 
       prefs.Set("size", this.Size);
       prefs.Set("location", this.Location);
+
+      // New thing
+      if (!prefs.ContainsKey("key"))
+      {
+        prefs.Set("key_docs", _defaultKeyText);
+      }
+      else
+      {
+        prefs.Set("key", _userKeyText);
+      }
 
       prefs.Save(@"C:\Temp\Test.json");
     }

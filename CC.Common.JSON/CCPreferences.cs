@@ -106,6 +106,11 @@ namespace CC.Common.JSON
       return ret;
     }
 
+    public bool ContainsKey(string key)
+    {
+      return ht.ContainsKey(key);
+    }
+
     public void ResetToDefaults()
     {
       foreach (DictionaryEntry e in defaults)
