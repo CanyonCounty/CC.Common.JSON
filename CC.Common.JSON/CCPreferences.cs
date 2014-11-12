@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace CC.Common.JSON
 {
   public class CCPreferences: IEnumerable
   {
-    internal bool _dirty;
     internal string _fileName;
     internal Hashtable ht;
     internal Hashtable defaults;
@@ -78,13 +78,24 @@ namespace CC.Common.JSON
     {
       ht = new Hashtable();
       defaults = new Hashtable();
-      _dirty = false;
-      Load();
+      //Load(); // <-- NEVER DO THIS!
     }
 
     public bool IsDirty
     {
-      get { return _dirty; }
+      get
+      {
+        bool ret = false;
+        foreach (DictionaryEntry e in ht)
+        {
+          if (!IsDefault((string)e.Key))
+          {
+            ret = true;
+            break;
+          }
+        }
+        return ret;      
+      }
     }
 
     public bool IsDefault(string key)
@@ -113,7 +124,6 @@ namespace CC.Common.JSON
           if (ht[key] != value)
           {
             ht[key] = value;
-            _dirty = true;
           }
         }
         else
@@ -121,7 +131,6 @@ namespace CC.Common.JSON
           if (value != defaults[key])
           {
             ht[key] = value;
-            _dirty = true;
           }
         }
       }
@@ -140,11 +149,11 @@ namespace CC.Common.JSON
           return ht[key];
         else
         {
-          if (defaultValue != null && (!String.IsNullOrEmpty(defaultValue.ToString())))
-          {
-            //defaults.Add(key, defaultValue);
-            _dirty = false;
-          }
+          //if (defaultValue != null && (!String.IsNullOrEmpty(defaultValue.ToString())))
+          //{
+          //  //defaults.Add(key, defaultValue);
+          //  //_dirty = false;
+          //}
           return defaultValue;
         }
       }
@@ -248,6 +257,52 @@ namespace CC.Common.JSON
       try
       {
         ret = (Boolean)_get(key, defaultValue);
+      }
+      catch { }
+      return ret;
+    }
+    #endregion
+
+    #region Size
+    public void Set(string key, Size value)
+    {
+      _set(key, String.Format("[{0}, {1}]", value.Width, value.Height));
+    }
+    public Size Get(string key, Size defaultValue)
+    {
+      Size ret = defaultValue;
+      try
+      {
+        string temp = _get(key, String.Format("[{0}, {1}]", defaultValue.Width, defaultValue.Height)).ToString();
+        string[] data = temp.Replace("[", "").Replace("]", "").Split(',');
+        int width;
+        int height;
+        Int32.TryParse(data[0].Trim(), out width);
+        Int32.TryParse(data[1].Trim(), out height);
+        ret = new Size(width, height);
+      }
+      catch { }
+      return ret;
+    }
+    #endregion
+
+    #region Point
+    public void Set(string key, Point value)
+    {
+      _set(key, String.Format("[{0}, {1}]", value.X, value.Y));
+    }
+    public Point Get(string key, Point defaultValue)
+    {
+      Point ret = defaultValue;
+      try
+      {
+        string temp = _get(key, String.Format("[{0}, {1}]", defaultValue.X, defaultValue.Y)).ToString();
+        string[] data = temp.Replace("[", "").Replace("]", "").Split(',');
+        int x;
+        int y;
+        Int32.TryParse(data[0].Trim(), out x);
+        Int32.TryParse(data[1].Trim(), out y);
+        ret = new Point(x, y);
       }
       catch { }
       return ret;
