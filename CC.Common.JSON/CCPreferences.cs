@@ -102,7 +102,41 @@ namespace CC.Common.JSON
     {
       bool ret = false;
       if (defaults.ContainsKey(key))
-        ret = (ht[key].ToString() == defaults[key].ToString());
+      {
+        // Get default object type
+        string test = ht[key].GetType().ToString();
+        if (ht[key].ToString() != test)
+        {
+          ret = (ht[key].ToString() == defaults[key].ToString());
+        }
+        else
+        {
+          if (ht[key] is ICollection)
+          {
+            ICollection h1 = (ICollection)ht[key];
+            ICollection d1 = (ICollection)defaults[key];
+            ret = h1.Count == d1.Count;
+            if (ret)
+            {
+              if (ht[key] is IEnumerable)
+              {
+                IEnumerable h2 = (IEnumerable)ht[key];
+                IEnumerable d2 = (IEnumerable)defaults[key];
+                IEnumerator he = h2.GetEnumerator();
+                IEnumerator de = d2.GetEnumerator();
+                while (ret)
+                {
+                  ret = he.Current.ToString() == de.Current.ToString();
+                  he.MoveNext();
+                  de.MoveNext();
+                }
+              }
+            }
+          }
+          else
+            ret = (ht[key].Equals(defaults[key]));
+        }
+      }
       return ret;
     }
 
