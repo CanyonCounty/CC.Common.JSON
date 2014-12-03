@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -50,9 +51,21 @@ namespace CC.Common.JSON.Demo
       numericUpDown1.Value = prefs.Get("integer", 0);
       _openCount = prefs.Get("float", 0.0f);
       Text = _openCount.ToString();
-      
-      this.Size = prefs.Get("size", new Size(314, 202));
+
+      this.Size = prefs.Get("size", new Size(314, 290));
       this.Location = prefs.Get("location", new Point(0, 0));
+
+      ArrayList list = new ArrayList();
+      String text = String.Empty;
+      list = (ArrayList)prefs.Get("pages", (ArrayList)list);
+      if (list != null)
+      {
+        foreach (string line in list)
+        {
+          text += line + Environment.NewLine;
+        }
+      }
+      txtPages.Text = text;
 
       if (prefs.ContainsKey("key"))
       {
@@ -88,6 +101,11 @@ namespace CC.Common.JSON.Demo
       {
         prefs.Set("key", _userKeyText);
       }
+
+      // ArrayLists seem to be clunky
+      string[] lines = txtPages.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+      ArrayList list = new ArrayList(lines);
+      prefs.Set("pages", list);
 
       prefs.Save(@"C:\Temp\Test.json");
     }
