@@ -124,12 +124,19 @@ namespace CC.Common.JSON
                 IEnumerable d2 = (IEnumerable)defaults[key];
                 IEnumerator he = h2.GetEnumerator();
                 IEnumerator de = d2.GetEnumerator();
-                while (ret)
-                {
-                  ret = he.Current.ToString() == de.Current.ToString();
-                  he.MoveNext();
-                  de.MoveNext();
-                }
+                  try
+                  {
+                      while (ret)
+                      {
+                          ret = he.Current.ToString() == de.Current.ToString();
+                          he.MoveNext();
+                          de.MoveNext();
+                      }
+                  }
+                  catch
+                  {
+                      ret = false;
+                  }
               }
             }
           }
